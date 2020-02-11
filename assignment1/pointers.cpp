@@ -137,6 +137,7 @@ int main(int argc, char **argv)
 		ofs << "  Average grade: "<< avg <<"\n";
 	}
 	ofs.close();
+	myfile.close();
     return 0;
 }
 
