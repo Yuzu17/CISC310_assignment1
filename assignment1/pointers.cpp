@@ -57,13 +57,23 @@ int main(int argc, char **argv)
 				if (ofs.is_open()){ ofs << "Please enter the student's first name: "; }
 
 				strcpy(f_name, line.c_str());
-
+				c = '3';
+				//whitespace check
 				if( std::count(line.begin(), line.end(), ' ') > 0){
 					ofs << "Sorry, I cannot understand your answer" << std::endl;
 					c = '2';
 				}else{
-					student.f_name = f_name;
-					c = '3';
+					//ascii check
+					for(i=0; i<line.length(); i++){
+						if( line[i]&0x80 ){
+						ofs << "Sorry, I cannot understand your answer" << std::endl;
+						c = '2';
+						}
+					}
+					if(c = '3'){
+						student.f_name = f_name;
+						c = '3';
+					}
 				}
 			break;
 			case '3' :
@@ -72,19 +82,28 @@ int main(int argc, char **argv)
 				strcpy(l_name, line.c_str());
 
 				//line = &student.f_name[0] + line;
-
-				/*for(i=0; i<line.length(); i++){
-					if( line[i]&0x80 ){
-						ofs << "Sorry, I cannot understand your answer" << std::endl;
-						c = '2';
-					}
-				}*/
-				if( (std::count(line.begin(), line.end(), ' ') > 0 || line.length() > 127) ){
+				c = '4';
+				//total name length check
+				if( strlen(&student.f_name[0]) + line.length() > 127 ){
 					ofs << "Sorry, I cannot understand your answer" << std::endl;
 					c = '2';
+				}
+				//whitespace check
+				else if( std::count(line.begin(), line.end(), ' ') > 0 ){
+					ofs << "Sorry, I cannot understand your answer" << std::endl;
+					c = '3';
 				}else{
-					student.l_name = l_name;
-					c = '4';
+					//ascii check
+					for(i=0; i<line.length(); i++){
+						if( line[i]&0x80 ){
+						ofs << "Sorry, I cannot understand your answer" << std::endl;
+						c = '3';
+						}
+					}
+					if(c = '4'){
+						student.l_name = l_name;
+						c = '4';
+					}
 				}
 			break;
 			case '4' :
@@ -97,7 +116,7 @@ int main(int argc, char **argv)
 				}else{
 					student.n_assignments = atoi(&line[0]);
 
-					if( student.n_assignments < MAX && student.n_assignments < 1 ){
+					if( student.n_assignments >= MAX || student.n_assignments < 1 ){
 						ofs << "Sorry, I cannot understand your answer" << std::endl;
 						c = '4';
 					}else{
